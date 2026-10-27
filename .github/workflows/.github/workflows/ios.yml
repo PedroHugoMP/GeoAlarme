@@ -1,0 +1,45 @@
+
+name: Compilar GeoAlarme
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - name: Baixar codigo
+        uses: actions/checkout@v4
+
+      - name: Verificar Xcode
+        run: xcodebuild -version
+
+      - name: Instalar XcodeGen
+        run: brew install xcodegen
+
+      - name: Gerar projeto
+        run: xcodegen generate
+
+      - name: Compilar para simulador
+        run: |
+          xcodebuild \
+            -project GeoAlarme.xcodeproj \
+            -scheme GeoAlarme \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Salvar aplicativo compilado
+        uses: actions/upload-artifact@v4
+        with:
+          name: GeoAlarme-simulador
+          path: build/Build/Products/Debug-iphonesimulator/GeoAlarme.app
+          if-no-files-found: error
