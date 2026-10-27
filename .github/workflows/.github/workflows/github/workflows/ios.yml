@@ -1,0 +1,47 @@
+
+name: Gerar GeoAlarme para iPhone
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar XcodeGen
+        run: brew install xcodegen
+
+      - name: Gerar projeto
+        run: xcodegen generate
+
+      - name: Compilar para iPhone
+        run: |
+          xcodebuild \
+            -project GeoAlarme.xcodeproj \
+            -scheme GeoAlarme \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Empacotar IPA
+        run: |
+          mkdir -p Payload
+          cp -R build/Build/Products/Release-iphoneos/GeoAlarme.app Payload/
+          /usr/bin/zip -r GeoAlarme-unsigned.ipa Payload
+
+      - name: Disponibilizar IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: GeoAlarme-IPA
+          path: GeoAlarme-unsigned.ipa
+          retention-days: 7
