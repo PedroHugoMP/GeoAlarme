@@ -2,12 +2,10 @@
 
 Aplicativo SwiftUI que monitora uma região circular e notifica quando o iPhone detecta entrada nela. A configuração fica no próprio aparelho; não há backend. O aplicativo requer iOS 17 ou posterior.
 
-## Arquivos
+## Estrutura e compilação na nuvem
 
 ```text
-GeoAlarme.xcodeproj/
-├── project.pbxproj
-└── xcshareddata/xcschemes/GeoAlarme.xcscheme
+project.yml
 GeoAlarme/
 ├── ContentView.swift
 ├── GeoAlarmeApp.swift
@@ -18,15 +16,20 @@ GeoAlarme/
     ├── AlarmManager.swift
     ├── LocationManager.swift
     └── NotificationManager.swift
+.github/
+└── workflows/
+    └── ios.yml
 README.md
 ```
 
+O arquivo `project.yml` é a configuração do [XcodeGen](https://github.com/yonaskolb/XcodeGen), que gera o projeto nativo `GeoAlarme.xcodeproj`. O workflow `.github/workflows/ios.yml` compila o app para o simulador em pushes para `main` e também pode ser iniciado manualmente pela aba **Actions**. O `.zip` do app de simulador fica disponível como artefato da execução por sete dias; ele não é um instalador para iPhone físico.
+
 ## Abrir e configurar no Xcode
 
-1. Em um Mac com Xcode, abra `GeoAlarme.xcodeproj` (duplo clique no Finder ou **File > Open**).
+1. Em um Mac com Xcode e XcodeGen, execute `xcodegen generate` na raiz do repositório e abra `GeoAlarme.xcodeproj` (duplo clique no Finder ou **File > Open**).
 2. Selecione o target **GeoAlarme** e, em **Signing & Capabilities > Signing**, escolha seu time. O identificador padrão `br.com.geoalarme.app` pode ser trocado por um identificador único, se necessário.
 3. Escolha um simulador ou iPhone e use **Product > Build** (ou **Run** para executar). O projeto já define SwiftUI, Swift, iOS 17.0, a scheme compartilhada `GeoAlarme` e as chaves de privacidade em `GeoAlarme/Info.plist`.
-4. Não habilite Background Modes / Audio: o app não promete manter áudio executando suspenso, e o monitoramento de região usa Core Location.
+4. O `Info.plist` declara o modo de segundo plano `location` para o monitoramento de região. Não habilite o modo `audio`: o app não promete manter áudio executando suspenso.
 5. Não é necessário adicionar arquivo de som: o toque repetitivo no primeiro plano é gerado como áudio PCM em memória e reproduzido com AVFoundation.
 
 ## Permissões
@@ -44,6 +47,7 @@ O monitoramento só é iniciado com Serviços de Localização ligados, autoriza
 
 ## Testes
 
+- Em uma build Debug do simulador, ative o alarme e use **Simular chegada** para exercitar o mesmo fluxo de disparo, som e notificação sem depender da localização simulada. O controle não está incluído em builds Release.
 - **Simulador:** no menu **Features > Location**, selecione uma localização ou rota GPX. Regiões podem se comportar de forma diferente de um aparelho real; não use o simulador para garantir confiabilidade em produção.
 - **Aparelho:** escolha um destino próximo, defina um raio adequado e atravesse a borda da região com o app ativo e depois em segundo plano. O tempo do evento depende do iOS, sinal e condições de localização.
 - Para uma simulação reproduzível, no Xcode use **Debug > Simulate Location** com um GPX que passe de fora para dentro do círculo. A entrada só ocorre quando as coordenadas simuladas cruzam o limite monitorado.

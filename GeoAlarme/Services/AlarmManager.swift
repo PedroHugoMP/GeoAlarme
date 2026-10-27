@@ -78,6 +78,12 @@ final class AlarmManager: ObservableObject {
         persist()
     }
 
+    #if DEBUG
+    func simulateRegionEntryForTesting() {
+        handleRegionEntry()
+    }
+    #endif
+
     private func handleRegionEntry() {
         guard state == .active, let configuration else { return }
 

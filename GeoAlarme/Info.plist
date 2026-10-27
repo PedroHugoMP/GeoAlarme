@@ -15,17 +15,21 @@
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>
-	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
+	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(MARKETING_VERSION)</string>
+	<string>1.0</string>
 	<key>CFBundleVersion</key>
-	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Permita localização Sempre para monitorar a região do destino quando o app estiver em segundo plano.</string>
+	<string>O GeoAlarme precisa monitorar a região do destino em segundo plano para avisar quando você chegar.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Sua localização é usada para configurar e monitorar a chegada ao destino escolhido.</string>
+	<string>O GeoAlarme usa sua localização para configurar seu destino.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
 	<key>UILaunchScreen</key>
 	<dict/>
 	<key>UISupportedInterfaceOrientations</key>

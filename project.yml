@@ -1,0 +1,22 @@
+name: GeoAlarme
+
+options:
+  bundleIdPrefix: br.com.geoalarme
+  deploymentTarget:
+    iOS: "17.0"
+
+targets:
+  GeoAlarme:
+    type: application
+    platform: iOS
+    sources:
+      - path: GeoAlarme
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: br.com.geoalarme.app
+        PRODUCT_NAME: GeoAlarme
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1"
+        INFOPLIST_FILE: GeoAlarme/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+        CODE_SIGNING_ALLOWED: NO
